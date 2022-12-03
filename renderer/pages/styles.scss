@@ -1,0 +1,11 @@
+.test1 {
+  background-color: red;
+
+  &__id {
+    color: blue;
+  }
+
+  &__name {
+    background-color: #fff;
+  }
+}
