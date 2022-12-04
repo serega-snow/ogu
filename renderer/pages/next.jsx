@@ -5,22 +5,12 @@ import Link from 'next/link';
 function Next() {
   return (
     <React.Fragment>
-      <div></div>
-      {/* <Head>
+      {/* <div></div>
+      <Head>
         <title>Next - Nextron (with-javascript)</title>
       </Head>
-      <div>
-        {loltest &&
-          loltest.map((lol1) => (
-            <div key={lol1.ID}>
-              <p>{lol1.ID}</p>
-              <p>{lol1.Name}</p>
-            </div>
-          ))}
-      </div>
       <button
       // onClick={async () => {
-
 
       //   setLoltest(responseData);
       // }}

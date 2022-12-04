@@ -12,9 +12,7 @@ function Home() {
       <Head>
         <title>Home - Nextron (with-javascript)</title>
       </Head>
-      <div>
-
-      </div>
+      <div></div>
       <div>
         <p>
           ⚡ Electron + Next.js ⚡ -
