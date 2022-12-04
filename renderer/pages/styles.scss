@@ -1,11 +1,29 @@
-.test1 {
-  background-color: red;
+@import url(./../public/fonts/Poppins/poppins.css);
+@import url(./../public/fonts/Lato/stylesheet.css);
+@import url(./toastr.css);
 
-  &__id {
-    color: blue;
-  }
-
-  &__name {
-    background-color: #fff;
-  }
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+}
+
+div#__next {
+  height: 100%;
+}
+
+.toast-title,
+.toast-message,
+toast-container * {
+  font-family: 'Poppins', sans-serif;
+}
+
+@import "./components/LoginComponent/LoginComponent.scss";
