@@ -1,0 +1,43 @@
+.Header {
+  display: flex;
+  height: 64px;
+  background: #FFFFFF;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+
+  &__title-left {
+    width: 240px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span.app-name {
+      font-family: 'Poppins', sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 27px;
+      /* identical to box height, or 112% */
+
+      letter-spacing: 0.02em;
+
+      color: #5A5A5F;
+    }
+  }
+
+  &__title-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span.title-text {
+      font-family: 'Lato';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 32px;
+      line-height: 38px;
+      letter-spacing: 0.16em;
+
+      color: #3B3B40;
+    }
+  }
+}

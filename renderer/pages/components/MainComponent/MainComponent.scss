@@ -1,0 +1,19 @@
+.MainComponent {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &__top-app {
+    z-index: 1;
+  }
+
+  &__main-app {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    flex: 1 1 auto;
+  }
+
+  @import "../Header/Header.scss";
+  @import '../AppNavigation/AppNavigation.scss'
+}

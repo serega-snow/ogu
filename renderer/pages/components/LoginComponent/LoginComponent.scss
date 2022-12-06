@@ -116,6 +116,13 @@
     line-height: 36px;
     letter-spacing: 0.02em;
     color: #FFFFFF;
+
+    &:hover {
+      background: #fff;
+      color: #004EDA;
+      border: 1px solid #004eda;
+      cursor: pointer;
+    }
   }
 
   &__forgot-your-password {

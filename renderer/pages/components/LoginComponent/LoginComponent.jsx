@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionAuthAccount } from './../../../redux/slices/mainSlice';
 
-const LoginFunc = ({ login, password }) => {};
-
 const LoginComponent = () => {
   const dispatch = useDispatch();
 

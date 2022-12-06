@@ -10,6 +10,7 @@ import {
 } from './../types';
 
 import LoginComponent from './components/LoginComponent/LoginComponent';
+import MainComponent from './components/MainComponent/MainComponent';
 
 function Home() {
   const { mainAppStatusAuth } = useSelector((store) => {
@@ -23,10 +24,22 @@ function Home() {
       {mainAppStatusAuth !== MAIN_STATUS__APP_AUTH_SUCCESS ? (
         <LoginComponent />
       ) : (
-        <div>авторизован</div>
+        <MainComponent />
       )}
+    </React.Fragment>
+  );
+}
 
-      {/* <div>123</div>
+export default Home;
+
+/*
+главная - оператор, администратор
+режимы, профили - администратор
+справка - оператор, начальник, администратор
+отчеты - начальник, оператор, администратор
+ */
+
+/* <div>123</div>
       <Head>
         <title>Home - Nextron (with-javascript)</title>
       </Head>
@@ -39,9 +52,9 @@ function Home() {
           </Link>
         </p>
         <img src='/images/logo.png' />
-      </div> */}
+      </div> */
 
-      {/* <div>
+/* <div>
         <ul>
           <li>
             <Link href='/components/LoginComponent/LoginComponent'>
@@ -50,9 +63,4 @@ function Home() {
           </li>
           <li></li>
         </ul>
-      </div> */}
-    </React.Fragment>
-  );
-}
-
-export default Home;
+      </div> */

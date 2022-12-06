@@ -1,0 +1,45 @@
+.AppNavigation {
+  background: #FFFFFF;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.2);
+  width: 240px;
+  min-height: 100%;
+
+  &__menu {
+    max-height: 350px;
+    display: flex;
+    flex-direction: column;
+
+    &-item {
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      column-gap: 20px;
+
+      svg,
+      span {
+        display: block;
+      }
+
+      span {
+        font-family: 'Poppins', sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 27px;
+        letter-spacing: 0.02em;
+        color: #606066;
+      }
+
+      &:hover {
+        cursor: pointer;
+        background: #004EDA;
+
+        svg * {
+          fill: #fff;
+          color: #fff;
+        }
+      }
+    }
+  }
+}
