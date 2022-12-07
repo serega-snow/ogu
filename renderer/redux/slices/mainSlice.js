@@ -53,6 +53,23 @@ const mainSlice = createSlice({
     selectItemMenuNav(state, action) {
       state.mainAppNavSelected = action.payload;
     },
+    clicedItemMenuSignOut(state, action) {
+      toastr.success(
+        `Выход успешно произведен`,
+        `Открыта состояние авторизации`,
+        {
+          timeOut: 5000,
+          extendedTimeOut: 5000,
+          progressBar: true,
+          escapeHtml: true,
+          closeButton: true,
+        }
+      );
+
+      state.mainAppNavSelected = null;
+      state.mainAppAuthUser = null;
+      state.mainAppStatusAuth = MAIN_STATUS__APP_AUTH_NOT;
+    },
   },
 
   extraReducers: {
@@ -74,7 +91,6 @@ const mainSlice = createSlice({
       const currectUser = action.payload;
 
       currectUser.roles = JSON.parse(currectUser.roles);
-
       state.mainAppAuthUser = currectUser;
 
       toastr.success(`Авторизация успешно прошла`, `Успех авторизации`, {
@@ -88,5 +104,5 @@ const mainSlice = createSlice({
   },
 });
 
-export const { selectItemMenuNav } = mainSlice.actions;
+export const { selectItemMenuNav, clicedItemMenuSignOut } = mainSlice.actions;
 export default mainSlice.reducer;
