@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { clicedItemMenuSignOut } from '../../../redux/slices/mainSlice';
+import toastr from 'toastr';
 
 import Header from '../Header/Header';
 import AppNavigation from '../AppNavigation/AppNavigation';
@@ -23,38 +24,181 @@ import {
 const MainComponent = () => {
   const dispatch = useDispatch();
 
-  const { mainAppNavSelected } = useSelector((store) => store.mainSlice);
+  const { mainAppNavSelected, mainAppAuthUser } = useSelector(
+    (store) => store.mainSlice
+  );
   const [
     actionMountComponentFromSelectedItemMenu,
     setActionMountComponentFromSelectedItem,
   ] = useState(<div>Как вы здесь оказались? :) ^_^</div>);
 
   useEffect(() => {
+    let accessFor = null;
+    let hasRole = null;
+
     switch (mainAppNavSelected) {
-      case MAIN_NAV__HOME_PAGE:
+      case MAIN_NAV__HOME_PAGE: {
+        accessFor = [`оператор`, `администратор`];
+        hasRole = false;
+
+        mainAppAuthUser['массив_ролей'].forEach((itemRole) => {
+          if (accessFor.includes(itemRole)) {
+            hasRole = true;
+          }
+        });
+
+        if (!hasRole) {
+          toastr.error(
+            `Не хватает прав доступа к функционалу`,
+            `Ошибка доступа`,
+            {
+              timeOut: 5000,
+              extendedTimeOut: 5000,
+              progressBar: true,
+              escapeHtml: true,
+              closeButton: true,
+            }
+          );
+          break;
+        }
+
         setActionMountComponentFromSelectedItem(<HomePage />);
         break;
-      case MAIN_NAV__PROFILE_PAGE:
+      }
+
+      case MAIN_NAV__PROFILE_PAGE: {
+        accessFor = [`администратор`];
+        hasRole = false;
+
+        mainAppAuthUser['массив_ролей'].forEach((itemRole) => {
+          if (accessFor.includes(itemRole)) {
+            hasRole = true;
+          }
+        });
+
+        if (!hasRole) {
+          toastr.error(
+            `Не хватает прав доступа к функционалу`,
+            `Ошибка доступа`,
+            {
+              timeOut: 5000,
+              extendedTimeOut: 5000,
+              progressBar: true,
+              escapeHtml: true,
+              closeButton: true,
+            }
+          );
+          break;
+        }
+
         setActionMountComponentFromSelectedItem(<ProfilePage />);
         break;
-      case MAIN_NAV__REPORT_PAGE:
+      }
+
+      case MAIN_NAV__REPORT_PAGE: {
+        accessFor = [`оператор`, `начальник`, `администратор`];
+        hasRole = false;
+
+        mainAppAuthUser['массив_ролей'].forEach((itemRole) => {
+          if (accessFor.includes(itemRole)) {
+            hasRole = true;
+          }
+        });
+
+        if (!hasRole) {
+          toastr.error(
+            `Не хватает прав доступа к функционалу`,
+            `Ошибка доступа`,
+            {
+              timeOut: 5000,
+              extendedTimeOut: 5000,
+              progressBar: true,
+              escapeHtml: true,
+              closeButton: true,
+            }
+          );
+          break;
+        }
+
         setActionMountComponentFromSelectedItem(<ReportPage />);
         break;
-      case MAIN_NAV__MODES_PAGE:
+      }
+
+      case MAIN_NAV__MODES_PAGE: {
+        accessFor = [`администратор`];
+        hasRole = false;
+
+        mainAppAuthUser['массив_ролей'].forEach((itemRole) => {
+          if (accessFor.includes(itemRole)) {
+            hasRole = true;
+          }
+        });
+
+        if (!hasRole) {
+          toastr.error(
+            `Не хватает прав доступа к функционалу`,
+            `Ошибка доступа`,
+            {
+              timeOut: 5000,
+              extendedTimeOut: 5000,
+              progressBar: true,
+              escapeHtml: true,
+              closeButton: true,
+            }
+          );
+          break;
+        }
+
         setActionMountComponentFromSelectedItem(<ModesPage />);
         break;
-      case MAIN_NAV__HELPS_PAGE:
+      }
+
+      case MAIN_NAV__HELPS_PAGE: {
+        accessFor = [`оператор`, `начальник`, `администратор`];
+        hasRole = false;
+
+        mainAppAuthUser['массив_ролей'].forEach((itemRole) => {
+          if (accessFor.includes(itemRole)) {
+            hasRole = true;
+          }
+        });
+
+        if (!hasRole) {
+          toastr.error(
+            `Не хватает прав доступа к функционалу`,
+            `Ошибка доступа`,
+            {
+              timeOut: 5000,
+              extendedTimeOut: 5000,
+              progressBar: true,
+              escapeHtml: true,
+              closeButton: true,
+            }
+          );
+          break;
+        }
+
         setActionMountComponentFromSelectedItem(<HelpsPage />);
         break;
-      case null:
+      }
+
+      case null: {
         setActionMountComponentFromSelectedItem(<SelectMenuItemComponent />);
         break;
+      }
+
       case MAIN_NAV__SIGNOUT_PAGE:
-      default:
+      default: {
         dispatch(clicedItemMenuSignOut());
         break;
+      }
     }
   }, [mainAppNavSelected]);
+
+  useEffect(
+    () => console.log(`mainAppAuthUser:`, mainAppAuthUser),
+    [mainAppAuthUser]
+  );
 
   return (
     <div className='MainComponent'>

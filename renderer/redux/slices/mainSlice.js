@@ -19,7 +19,7 @@ export const actionAuthAccount = createAsyncThunk(
   async ({ login, password }, { rejectWithValue }) => {
     try {
       const [checkUser] = await window.connectMySQL.execute(
-        `SELECT * FROM users WHERE login = '${login}' limit 1`
+        `SELECT * FROM аккаунты WHERE логин = '${login}' limit 1`
       );
 
       if (!checkUser.length) {
@@ -28,7 +28,7 @@ export const actionAuthAccount = createAsyncThunk(
 
       const currectUser = checkUser[0];
 
-      if (currectUser.password !== password) {
+      if (currectUser['пароль'] !== password) {
         throw new Error('Пароль не правильный');
       }
 
@@ -86,11 +86,13 @@ const mainSlice = createSlice({
       });
     },
     [actionAuthAccount.fulfilled]: (state, action) => {
+      console.log(`action.payload`, action.payload);
+
       state.mainAppStatusAuth = MAIN_STATUS__APP_AUTH_SUCCESS;
 
       const currectUser = action.payload;
 
-      currectUser.roles = JSON.parse(currectUser.roles);
+      currectUser['массив_ролей'] = JSON.parse(currectUser['массив_ролей']);
       state.mainAppAuthUser = currectUser;
 
       toastr.success(`Авторизация успешно прошла`, `Успех авторизации`, {

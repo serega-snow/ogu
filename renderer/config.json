@@ -2,7 +2,7 @@
   "DB_CONFIG": {
     "host": "localhost",
     "user": "root",
-    "database": "mansurov-ogu",
+    "database": "бункер",
     "password": "root"
   }
 }
