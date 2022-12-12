@@ -2,6 +2,7 @@
   min-height: 100%;
   display: flex;
   flex-direction: column;
+  background: #F2F2F8;
 
   &__top-app {
     z-index: 1;
@@ -14,7 +15,28 @@
     flex: 1 1 auto;
   }
 
+  .button {
+    min-width: 256px;
+    border: 0;
+    outline: none;
+    background: #004EDA;
+    border-radius: 4px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 5px;
+    padding-right: 5px;
+
+    font-family: Poppins, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 36px;
+    letter-spacing: 0.02em;
+    color: #FFFFFF;
+  }
+
   @import "../Header/Header.scss";
   @import "../AppNavigation/AppNavigation.scss";
   @import "../SelectMenuItemComponent/SelectMenuItem.scss";
+  @import "../HomePageComponent/HomePage.scss";
 }

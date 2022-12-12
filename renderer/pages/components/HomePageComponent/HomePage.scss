@@ -1,1 +1,163 @@
-.HomePage {}
+.HomePage {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 30px;
+  padding: 20px;
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+
+    .input-wrapper {
+      .label-input {
+        font-family: Poppins, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 27px;
+        /* identical to box height, or 150% */
+
+        letter-spacing: 0.02em;
+
+        /* Secondary/700 - 5A5A5F */
+
+        color: #5A5A5F;
+
+        .input {
+          background: #FFFFFF;
+          width: 256px;
+          border: 1px solid #5A5A5F;
+          border-radius: 4px;
+          padding: 14px;
+          outline: none;
+
+          font-family: Poppins, sans-serif;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 21px;
+          letter-spacing: 0.02em;
+          color: #5A5A5F;
+        }
+      }
+    }
+
+    .button-wrapper {
+      display: flex;
+      align-items: flex-end;
+    }
+  }
+
+  &__down {
+    display: flex;
+    justify-content: space-between;
+
+    .current-download {
+      width: 45%;
+      padding: 10px;
+      background: #FFFFFF;
+      box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+
+      .button {
+        margin-top: 50px;
+      }
+
+      p,
+      li {
+        font-family: Poppins, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 27px;
+        letter-spacing: 0.02em;
+        color: #5A5A5F;
+      }
+
+      ol {
+        margin-left: 25px;
+      }
+    }
+
+    .mode-widget {
+      width: 45%;
+      padding: 10px;
+      background: #FFFFFF;
+      box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      row-gap: 15px;
+
+      .label {
+        font-family: Poppins, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 27px;
+        letter-spacing: 0.02em;
+        color: #5A5A5F;
+
+        .input {
+          padding: 10px;
+
+          font-family: 'Poppins';
+          font-style: normal;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 21px;
+          letter-spacing: 0.02em;
+          color: #5A5A5F;
+
+          background: #FFFFFF;
+          border: 1px solid #5A5A5F;
+          border-radius: 4px;
+        }
+      }
+
+      .wrapper-progress {
+        margin-top: 45px;
+        display: flex;
+        column-gap: 15px;
+
+        .progressbar {
+          height: 80px;
+          display: flex;
+          column-gap: 20px;
+          width: 100%;
+
+          &-result {
+            width: 100px;
+            height: 80px;
+          }
+
+          .CircularProgressbar-text {
+            font-size: 25px;
+            font-family: Poppins, sans-serif;
+          }
+
+          .current-proccess {
+            font-family: Poppins, sans-serif;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 21px;
+            letter-spacing: 0.02em;
+            color: #5A5A5F;
+            width: 100%;
+
+            span {
+              font-family: 'Poppins';
+              font-style: normal;
+              font-weight: 400;
+              font-size: 24px;
+              line-height: 36px;
+              color: #004EDA;
+            }
+          }
+        }
+      }
+    }
+  }
+}
