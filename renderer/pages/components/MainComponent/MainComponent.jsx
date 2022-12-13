@@ -195,11 +195,6 @@ const MainComponent = () => {
     }
   }, [mainAppNavSelected]);
 
-  useEffect(
-    () => console.log(`mainAppAuthUser:`, mainAppAuthUser),
-    [mainAppAuthUser]
-  );
-
   return (
     <div className='MainComponent'>
       <div className='MainComponent__top-app'>

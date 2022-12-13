@@ -40,6 +40,23 @@ export const actionAuthAccount = createAsyncThunk(
 );
 // процесс авторизации
 
+export const getTypeOfRawMaterialsFromDataBase = createAsyncThunk(
+  'main-slice/getTypeOfRawMaterialsFromDataBase',
+  async ({}, { rejectWithValue }) => {
+    try {
+      const [typesMaterials] = await window.connectMySQL.execute(
+        `SELECT * FROM вид_груза`
+      );
+
+      if (typesMaterials.length < 1) return null;
+
+      return typesMaterials;
+    } catch (errorObject) {
+      return rejectWithValue(errorObject.message);
+    }
+  }
+);
+
 const mainSlice = createSlice({
   name: 'main-slice',
 
@@ -47,6 +64,8 @@ const mainSlice = createSlice({
     mainAppStatusAuth: MAIN_STATUS__APP_AUTH_NOT,
     mainAppAuthUser: null,
     mainAppNavSelected: null,
+
+    dataTypeOfRawMaterials: null,
   },
 
   reducers: {
@@ -73,7 +92,6 @@ const mainSlice = createSlice({
   },
 
   extraReducers: {
-    [actionAuthAccount.pending]: (state, action) => {},
     [actionAuthAccount.rejected]: (state, action) => {
       state.mainAppStatusAuth = MAIN_STATUS__APP_AUTH_ERR;
 
@@ -86,8 +104,6 @@ const mainSlice = createSlice({
       });
     },
     [actionAuthAccount.fulfilled]: (state, action) => {
-      console.log(`action.payload`, action.payload);
-
       state.mainAppStatusAuth = MAIN_STATUS__APP_AUTH_SUCCESS;
 
       const currectUser = action.payload;
@@ -102,6 +118,10 @@ const mainSlice = createSlice({
         escapeHtml: true,
         closeButton: true,
       });
+    },
+
+    [getTypeOfRawMaterialsFromDataBase.fulfilled]: (state, action) => {
+      state.dataTypeOfRawMaterials = action.payload;
     },
   },
 });

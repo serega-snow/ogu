@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 12, 2022 at 07:58 PM
+-- Generation Time: Dec 13, 2022 at 05:51 PM
 -- Server version: 8.0.29
 -- PHP Version: 7.1.33
 
@@ -70,7 +70,9 @@ CREATE TABLE `вид_груза` (
 --
 
 INSERT INTO `вид_груза` (`код`, `название`, `краткое_название`) VALUES
-(1, 'Клинкер', 'Кл');
+(1, 'Клинкер', 'Кл'),
+(2, 'Еще один', 'Еще1'),
+(3, 'Третий вид', 'еще3');
 
 -- --------------------------------------------------------
 
@@ -407,7 +409,7 @@ ALTER TABLE `аккаунты`
 -- AUTO_INCREMENT for table `вид_груза`
 --
 ALTER TABLE `вид_груза`
-  MODIFY `код` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `код` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `груз`
@@ -500,7 +502,8 @@ ALTER TABLE `журнал_работы`
 --
 ALTER TABLE `расчетное_груз_время`
   ADD CONSTRAINT `расчетное_груз_время_ibfk_1` FOREIGN KEY (`груз`) REFERENCES `груз` (`номер`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `расчетное_груз_время_ibfk_2` FOREIGN KEY (`установки`) REFERENCES `устройство` (`номер`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `расчетное_груз_время_ibfk_2` FOREIGN KEY (`установки`) REFERENCES `устройство` (`номер`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `расчетное_груз_время_ibfk_3` FOREIGN KEY (`погода`) REFERENCES `погода` (`код`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `режим_работы`
