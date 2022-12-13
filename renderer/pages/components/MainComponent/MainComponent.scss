@@ -33,6 +33,13 @@
     line-height: 36px;
     letter-spacing: 0.02em;
     color: #FFFFFF;
+
+    &:hover {
+      background: #FFFFFF;
+      border: 1px solid #004EDA;
+      color: #004EDA;
+      cursor: pointer;
+    }
   }
 
   @import "../Header/Header.scss";
