@@ -1,6 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTypeOfRawMaterialsFromDataBase } from '../../../redux/slices/mainSlice';
+import {
+  getTypeOfRawMaterialsFromDataBase,
+  getСargoСonditionsFromDataBase,
+  saveAndSelectMode,
+} from '../../../redux/slices/mainSlice';
 import toastr from 'toastr';
 import moment from 'moment';
 import {
@@ -16,6 +20,7 @@ const HomePage = () => {
   const refSelectValueWagons = useRef();
   const refInputValueWeightCargo = useRef();
   const refSelectTypeOfRawMaterials = useRef();
+  const refSelectCargoConditions = useRef();
 
   const [stateCurrentValueWagons, setStateCurrentValueWagons] = useState(null);
   const [stateInputValueWeightCargo, setStateInputValueWeightCargo] =
@@ -23,11 +28,16 @@ const HomePage = () => {
   const [stateAddedDate, setStateAddedDate] = useState(null);
   const [stateSelectTypeOfRawMaterials, setStateSelectTypeOfRawMaterials] =
     useState(null);
+  const [stateSelectCargoCondition, setStateSelectCargoCondition] =
+    useState(null);
 
-  const { dataTypeOfRawMaterials } = useSelector((store) => store.mainSlice);
+  const { dataTypeOfRawMaterials, dataCargoСonditions } = useSelector(
+    (store) => store.mainSlice
+  );
 
   useEffect(() => {
     dispatch(getTypeOfRawMaterialsFromDataBase());
+    dispatch(getСargoСonditionsFromDataBase());
   }, [dispatch]);
 
   return (
@@ -84,6 +94,26 @@ const HomePage = () => {
           </label>
         </div>
 
+        <div className='input-wrapper'>
+          <label className='label-input'>
+            Состояние груза:
+            <br />
+            <select className='input' ref={refSelectCargoConditions}>
+              <option value='-1'>-- Выберите состояние --</option>
+              {dataCargoСonditions &&
+                dataCargoСonditions.map((cargoCondigionItem) => (
+                  <option
+                    key={cargoCondigionItem['код']}
+                    value={cargoCondigionItem['код']}
+                  >
+                    {cargoCondigionItem['название']} (
+                    {cargoCondigionItem['краткое_название']})
+                  </option>
+                ))}
+            </select>
+          </label>
+        </div>
+
         <div className='button-wrapper'>
           <button
             className='button'
@@ -120,6 +150,36 @@ const HomePage = () => {
                 return;
               }
 
+              if (refSelectTypeOfRawMaterials.current.value === `-1`) {
+                toastr.error(
+                  'Выберите вид сырья!',
+                  `Ошибка сохранения первичных данных`,
+                  {
+                    timeOut: 5000,
+                    extendedTimeOut: 5000,
+                    progressBar: true,
+                    escapeHtml: true,
+                    closeButton: true,
+                  }
+                );
+                return;
+              }
+
+              if (refSelectCargoConditions.current.value === `-1`) {
+                toastr.error(
+                  'Выберите состояние груза!',
+                  `Ошибка сохранения первичных данных`,
+                  {
+                    timeOut: 5000,
+                    extendedTimeOut: 5000,
+                    progressBar: true,
+                    escapeHtml: true,
+                    closeButton: true,
+                  }
+                );
+                return;
+              }
+
               setStateCurrentValueWagons(refSelectValueWagons.current.value);
               setStateInputValueWeightCargo(
                 refInputValueWeightCargo.current.value
@@ -132,6 +192,14 @@ const HomePage = () => {
               );
 
               setStateSelectTypeOfRawMaterials(tempTypeItemRawMat[0]);
+
+              const tempTypeItemCargCond = dataCargoСonditions.filter(
+                (cargoCondigionItem) =>
+                  cargoCondigionItem[`код`] ===
+                  Number.parseFloat(refSelectCargoConditions.current.value)
+              );
+
+              setStateSelectCargoCondition(tempTypeItemCargCond[0]);
 
               setStateAddedDate(new Date());
             }}
@@ -159,10 +227,41 @@ const HomePage = () => {
                 stateSelectTypeOfRawMaterials['название']}
             </li>
             <li>
+              Состояние:{' '}
+              {stateSelectCargoCondition &&
+                stateSelectCargoCondition['название']}
+            </li>
+            <li>
               Вес: {stateInputValueWeightCargo && stateInputValueWeightCargo}
             </li>
           </ol>
-          <button className='button'>Сохранить и подобрать режим</button>
+          <button
+            className='button'
+            onClick={(event) => {
+              event.preventDefault();
+
+              dispatch(
+                saveAndSelectMode({
+                  states: {
+                    stateCurrentValueWagons,
+                    stateInputValueWeightCargo,
+                    stateAddedDate,
+                    stateSelectTypeOfRawMaterials,
+                    stateSelectCargoCondition,
+                  },
+                  setStates: {
+                    setStateCurrentValueWagons,
+                    setStateInputValueWeightCargo,
+                    setStateAddedDate,
+                    setStateSelectTypeOfRawMaterials,
+                    setStateSelectCargoCondition,
+                  },
+                })
+              );
+            }}
+          >
+            Сохранить и подобрать режим
+          </button>
         </div>
 
         <div className='mode-widget'>

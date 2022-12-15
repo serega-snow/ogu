@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
+    "bcryptjs": "^2.4.3",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.1.0",
     "js-cookie": "^3.0.1",
