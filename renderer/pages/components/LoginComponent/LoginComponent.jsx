@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { actionAuthAccount } from './../../../redux/slices/mainSlice';
+import { actionAuthAccount } from './../../../redux/ExtraReducers/Accounts.ExtraReducer';
 
 const LoginComponent = () => {
   const dispatch = useDispatch();

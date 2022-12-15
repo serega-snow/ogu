@@ -42,8 +42,37 @@
     }
   }
 
+  table {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 14px;
+    background: white;
+    max-width: 70%;
+    width: 70%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+
+  th {
+    font-weight: normal;
+    color: #039;
+    border-bottom: 2px solid #6678b1;
+    padding: 10px 8px;
+  }
+
+  td {
+    color: #669;
+    padding: 9px 8px;
+    transition: .3s linear;
+  }
+
+  tr:hover td {
+    color: #6699ff;
+  }
+
   @import "../Header/Header.scss";
   @import "../AppNavigation/AppNavigation.scss";
   @import "../SelectMenuItemComponent/SelectMenuItem.scss";
   @import "../HomePageComponent/HomePage.scss";
+  @import "../ProfilePageComponent/ProfilePage.scss";
 }

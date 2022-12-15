@@ -4,7 +4,7 @@ import {
   getTypeOfRawMaterialsFromDataBase,
   getСargoСonditionsFromDataBase,
   saveAndSelectMode,
-} from '../../../redux/slices/mainSlice';
+} from '../../../redux/ExtraReducers/Main.ExtraReducer';
 import toastr from 'toastr';
 import moment from 'moment';
 import {
