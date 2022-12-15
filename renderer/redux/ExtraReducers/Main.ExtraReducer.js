@@ -41,8 +41,16 @@ export const getСargoСonditionsFromDataBase = createAsyncThunk(
 // главная -> сохранить и подобрать режим
 export const saveAndSelectMode = createAsyncThunk(
   'main-slice/saveAndSelectMode',
-  async ({ states, setStates }, { rejectWithValue }) => {
+  async (inputObject, { rejectWithValue }) => {
     try {
+      const { statePreviewData, setStatePreviewData, states, setStates } =
+        inputObject;
+
+      if (!statePreviewData)
+        throw new Error(
+          'Данные не указаны, укажите данные и попробуйте еще раз!'
+        );
+
       const {
         stateCurrentValueWagons,
         stateInputValueWeightCargo,
@@ -75,17 +83,19 @@ export const saveAndSelectMode = createAsyncThunk(
         '2')`
       );
 
+      console.log(`stateCurrentValueWagons::`, stateCurrentValueWagons);
+      console.log(`resultRequestSaveCargo::`, resultRequestSaveCargo);
+
+      setStatePreviewData(false);
       setStateCurrentValueWagons(null);
       setStateInputValueWeightCargo(null);
       setStateAddedDate(null);
       setStateSelectTypeOfRawMaterials(null);
       setStateSelectCargoCondition(null);
-
-      console.log(`stateCurrentValueWagons::`, stateCurrentValueWagons);
-      console.log(`resultRequestSaveCargo::`, resultRequestSaveCargo);
     } catch (errorObject) {
       rejectWithValue(errorObject.message);
     }
   }
 );
+
 // главная -> сохранить и подобрать режим

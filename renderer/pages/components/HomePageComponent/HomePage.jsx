@@ -22,6 +22,7 @@ const HomePage = () => {
   const refSelectTypeOfRawMaterials = useRef();
   const refSelectCargoConditions = useRef();
 
+  const [statePreviewData, setStatePreviewData] = useState(false);
   const [stateCurrentValueWagons, setStateCurrentValueWagons] = useState(null);
   const [stateInputValueWeightCargo, setStateInputValueWeightCargo] =
     useState(null);
@@ -180,6 +181,8 @@ const HomePage = () => {
                 return;
               }
 
+              setStatePreviewData(true);
+
               setStateCurrentValueWagons(refSelectValueWagons.current.value);
               setStateInputValueWeightCargo(
                 refInputValueWeightCargo.current.value
@@ -242,6 +245,8 @@ const HomePage = () => {
 
               dispatch(
                 saveAndSelectMode({
+                  statePreviewData,
+                  setStatePreviewData,
                   states: {
                     stateCurrentValueWagons,
                     stateInputValueWeightCargo,

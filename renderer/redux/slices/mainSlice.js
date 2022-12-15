@@ -94,14 +94,11 @@ const mainSlice = createSlice({
       state.dataCargoСonditions = action.payload;
     },
 
+    [saveAndSelectMode.rejected]: (state, action) => {
+      console.log(`rejected`, action);
+    },
     [saveAndSelectMode.fulfilled]: (state, action) => {
-      toastr.success(`Груз успешно заведен в систему!`, `Успех операции`, {
-        timeOut: 5000,
-        extendedTimeOut: 5000,
-        progressBar: true,
-        escapeHtml: true,
-        closeButton: true,
-      });
+      console.log(`fulfilled`, action);
     },
   },
 });
