@@ -1,8 +1,8 @@
 {
   "DB_CONFIG": {
-    "host": "localhost",
-    "user": "root",
+    "host": "195.133.144.70",
+    "user": "elmir-mysql",
     "database": "bunker",
-    "password": "root"
+    "password": "elmir-mysql"
   }
 }
