@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import moment from 'moment';
 
 // процесс запроса видов груза
 export const getTypeOfRawMaterialsFromDataBase = createAsyncThunk(
@@ -93,7 +94,7 @@ export const saveAndSelectMode = createAsyncThunk(
       setStateSelectTypeOfRawMaterials(null);
       setStateSelectCargoCondition(null);
     } catch (errorObject) {
-      rejectWithValue(errorObject.message);
+      return rejectWithValue(errorObject.message);
     }
   }
 );
