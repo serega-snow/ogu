@@ -10,7 +10,7 @@ export const getTypeOfRawMaterialsFromDataBase = createAsyncThunk(
         `SELECT * FROM вид_груза`
       );
 
-      if (typesMaterials.length < 1) return null;
+      if (typesMaterials.length < 1) throw new Error('Нет данных!');
 
       return typesMaterials;
     } catch (errorObject) {
@@ -29,7 +29,7 @@ export const getСargoСonditionsFromDataBase = createAsyncThunk(
         `SELECT * FROM состояние`
       );
 
-      if (cargoСonditions.length < 1) return null;
+      if (cargoСonditions.length < 1) throw new Error('Нет данных!');
 
       return cargoСonditions;
     } catch (errorObject) {

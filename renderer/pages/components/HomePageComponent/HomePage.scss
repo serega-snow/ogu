@@ -10,40 +10,6 @@
     justify-content: space-between;
     flex-wrap: wrap;
 
-    .input-wrapper {
-      .label-input {
-        font-family: Poppins, sans-serif;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 18px;
-        line-height: 27px;
-        /* identical to box height, or 150% */
-
-        letter-spacing: 0.02em;
-
-        /* Secondary/700 - 5A5A5F */
-
-        color: #5A5A5F;
-
-        .input {
-          background: #FFFFFF;
-          width: 256px;
-          border: 1px solid #5A5A5F;
-          border-radius: 4px;
-          padding: 14px;
-          outline: none;
-
-          font-family: Poppins, sans-serif;
-          font-style: normal;
-          font-weight: 500;
-          font-size: 14px;
-          line-height: 21px;
-          letter-spacing: 0.02em;
-          color: #5A5A5F;
-        }
-      }
-    }
-
     .button-wrapper {
       display: flex;
       align-items: flex-end;
@@ -101,6 +67,7 @@
         color: #5A5A5F;
 
         .input {
+          height: 51px;
           padding: 10px;
 
           font-family: 'Poppins';

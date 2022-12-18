@@ -20,6 +20,11 @@ import {
   getСargoСonditionsFromDataBase,
   saveAndSelectMode,
 } from '../ExtraReducers/Main.ExtraReducer';
+import {
+  getAllUsers,
+  saveAccountUser,
+  deleteAccountUser,
+} from '../ExtraReducers/Profile.ExtraReduces';
 
 const mainSlice = createSlice({
   name: 'main-slice',
@@ -31,6 +36,7 @@ const mainSlice = createSlice({
 
     dataTypeOfRawMaterials: null,
     dataCargoСonditions: null,
+    dataUsers: null,
   },
 
   reducers: {
@@ -86,6 +92,8 @@ const mainSlice = createSlice({
       });
     },
 
+    //________________________________________________________________
+
     [getTypeOfRawMaterialsFromDataBase.fulfilled]: (state, action) => {
       state.dataTypeOfRawMaterials = action.payload;
     },
@@ -94,11 +102,69 @@ const mainSlice = createSlice({
       state.dataCargoСonditions = action.payload;
     },
 
+    [getAllUsers.rejected]: (state, action) => {
+      toastr.error(action.payload, `Ошибка получения данных`, {
+        timeOut: 5000,
+        extendedTimeOut: 5000,
+        progressBar: true,
+        escapeHtml: true,
+        closeButton: true,
+      });
+    },
+
+    [getAllUsers.fulfilled]: (state, action) => {
+      state.dataUsers = action.payload;
+    },
+
+    //________________________________________________________________
+
     [saveAndSelectMode.rejected]: (state, action) => {
-      console.log(`rejected`, action);
+      toastr.error(action.payload, `Ошибка сохранения данных`, {
+        timeOut: 5000,
+        extendedTimeOut: 5000,
+        progressBar: true,
+        escapeHtml: true,
+        closeButton: true,
+      });
     },
     [saveAndSelectMode.fulfilled]: (state, action) => {
-      console.log(`fulfilled`, action);
+      toastr.success(`Груз сохранен`, `Данные записаны`, {
+        timeOut: 5000,
+        extendedTimeOut: 5000,
+        progressBar: true,
+        escapeHtml: true,
+        closeButton: true,
+      });
+    },
+
+    [saveAccountUser.rejected]: (state, action) => {
+      toastr.error(action.payload, `Ошибка сохранения данных`, {
+        timeOut: 5000,
+        extendedTimeOut: 5000,
+        progressBar: true,
+        escapeHtml: true,
+        closeButton: true,
+      });
+    },
+
+    [saveAccountUser.fulfilled]: (state, action) => {
+      toastr.success(`Учетная запись успешно создана`, `Данные записаны`, {
+        timeOut: 5000,
+        extendedTimeOut: 5000,
+        progressBar: true,
+        escapeHtml: true,
+        closeButton: true,
+      });
+    },
+
+    [deleteAccountUser.fulfilled]: (state, action) => {
+      toastr.success(`Учетная запись успешно удалена`, `Данные уничтожены`, {
+        timeOut: 5000,
+        extendedTimeOut: 5000,
+        progressBar: true,
+        escapeHtml: true,
+        closeButton: true,
+      });
     },
   },
 });

@@ -15,4 +15,31 @@
 
     color: #004EDA;
   }
+
+  button.button {
+    margin-bottom: 15px;
+  }
+
+  .wrapper-created {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .checkbox-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-end;
+  }
+
+  .svg-hover {
+    &:hover {
+      cursor: pointer;
+
+      * {
+        fill: red;
+      }
+    }
+  }
 }
