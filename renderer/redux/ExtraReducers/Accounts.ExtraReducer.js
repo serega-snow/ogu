@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import bcrypt from 'bcryptjs';
 
-// процесс авторизации
+// процесс авторизации(асинхронный редьюсер)
 export const actionAuthAccount = createAsyncThunk(
   'main-slice/actionAuthAccount',
   async ({ login, password }, { rejectWithValue }) => {

@@ -30,19 +30,24 @@ const mainSlice = createSlice({
   name: 'main-slice',
 
   initialState: {
-    mainAppStatusAuth: MAIN_STATUS__APP_AUTH_NOT,
+    mainAppStatusAuth: MAIN_STATUS__APP_AUTH_NOT, // авторизация или нет
+    // данные вошедшего
     mainAppAuthUser: null,
+    // выбранный пунк меню
     mainAppNavSelected: null,
-
+    // все виды грузов
     dataTypeOfRawMaterials: null,
-    dataCargoСonditions: null,
-    dataUsers: null,
+    dataCargoСonditions: null, // все состояние грузов
+    dataUsers: null, // все юзеры
   },
 
   reducers: {
+    // клик пункта меню
     selectItemMenuNav(state, action) {
       state.mainAppNavSelected = action.payload;
     },
+    // клик пункта меню
+    //выход из аккаунта
     clicedItemMenuSignOut(state, action) {
       toastr.success(
         `Выход успешно произведен`,
@@ -60,9 +65,11 @@ const mainSlice = createSlice({
       state.mainAppAuthUser = null;
       state.mainAppStatusAuth = MAIN_STATUS__APP_AUTH_NOT;
     },
+    //выход из аккаунта
   },
 
   extraReducers: {
+    //неудачная авторизация
     [actionAuthAccount.rejected]: (state, action) => {
       state.mainAppStatusAuth = MAIN_STATUS__APP_AUTH_ERR;
 
@@ -74,6 +81,8 @@ const mainSlice = createSlice({
         closeButton: true,
       });
     },
+    //неудачная авторизация
+    //удачная авторизации
     [actionAuthAccount.fulfilled]: (state, action) => {
       state.mainAppStatusAuth = MAIN_STATUS__APP_AUTH_SUCCESS;
 
@@ -91,6 +100,7 @@ const mainSlice = createSlice({
         closeButton: true,
       });
     },
+    //удачная авторизации
 
     //________________________________________________________________
 

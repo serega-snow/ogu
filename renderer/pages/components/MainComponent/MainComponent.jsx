@@ -28,8 +28,8 @@ const MainComponent = () => {
     (store) => store.mainSlice
   );
   const [
-    actionMountComponentFromSelectedItemMenu,
-    setActionMountComponentFromSelectedItem,
+    actionMountComponentFromSelectedItemMenu, // состояние
+    setActionMountComponentFromSelectedItem, // установщик состояние(изменение)
   ] = useState(<div>Как вы здесь оказались? :) ^_^</div>);
 
   useEffect(() => {
