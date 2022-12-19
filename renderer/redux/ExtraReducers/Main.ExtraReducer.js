@@ -42,7 +42,7 @@ export const getСargoСonditionsFromDataBase = createAsyncThunk(
 // главная -> сохранить и подобрать режим
 export const saveAndSelectMode = createAsyncThunk(
   'main-slice/saveAndSelectMode',
-  async (inputObject, { rejectWithValue }) => {
+  async (inputObject, { rejectWithValue, dispatch }) => {
     try {
       const { statePreviewData, setStatePreviewData, states, setStates } =
         inputObject;
@@ -84,8 +84,26 @@ export const saveAndSelectMode = createAsyncThunk(
         '2')`
       );
 
+      // для матана
+      // const [resultRequestSaveJournal] = await window.connectMySQL.execute(
+      //   `INSERT INTO лог
+      //   (дата,
+      //   вагоны,
+      //   время_сушки,
+      //   тип_груза,
+      //   режим)
+      //   VALUES
+      //   ('${moment(stateAddedDate).format('YYYY-MM-DD')}',
+      //   '${stateCurrentValueWagons}',
+      //   '-1',
+      //   '${stateSelectTypeOfRawMaterials['код']}',
+      //   '-1')`
+      // );
+      // для матана
+
       console.log(`stateCurrentValueWagons::`, stateCurrentValueWagons);
       console.log(`resultRequestSaveCargo::`, resultRequestSaveCargo);
+      console.log(`resultRequestSaveJournal::`, resultRequestSaveJournal);
 
       setStatePreviewData(false);
       setStateCurrentValueWagons(null);
