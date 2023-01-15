@@ -11,7 +11,7 @@ const LoginComponent = () => {
   return (
     <div className='LoginComponent'>
       <div className='LoginComponent__left-side'>
-        <h1 className='LoginComponent__main-title'>АИС “Бункер”</h1>
+        <h1 className='LoginComponent__main-title'>ПИС “Бункер”</h1>
         <h2 className='LoginComponent__child-title'>
           Система размораживания грузов
         </h2>
