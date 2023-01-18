@@ -271,20 +271,45 @@ const HomePage = () => {
 
         <div className='mode-widget'>
           <label className='label'>
-            Рекомендованный режим: <input className='input' disabled />
+            Рекомендованный режим:{' '}
+            <input className='input' disabled value={'Режим не подобран'} />
           </label>
 
           <label className='label'>
-            Режим по умолчанию: <select className='input'></select>
+            Режим по умолчанию:{' '}
+            <select className='input'>
+              <option value={1}>не назначен</option>
+              <option value={2}>Режим 2</option>
+              <option value={3}>Режим 3</option>
+              <option value={4}>Режим 4</option>
+              <option value={5}>Режим 5</option>
+            </select>
           </label>
 
           <div className='wrapper-progress'>
-            <button className='button'>Начать</button>
+            <button
+              className='button'
+              onClick={() => {
+                // toastr.success('Процесс сушки завершен', `Успешно`, {
+                //   timeOut: 5000,
+                //   extendedTimeOut: 5000,
+                //   progressBar: true,
+                //   escapeHtml: true,
+                //   closeButton: true,
+                // });
+
+                window.alert(
+                  'Режим не подобран!!! Нажмите "Сохранить и подобрать режим"'
+                );
+              }}
+            >
+              Начать
+            </button>
 
             <div className='progressbar'>
               <CircularProgressbar
-                value={55}
-                text={`${55}%`}
+                value={100}
+                text={`${100}%`}
                 strokeWidth={8}
                 className='progressbar-result'
               />
@@ -292,7 +317,7 @@ const HomePage = () => {
               <div className='current-proccess'>
                 Текущий процесс сушки
                 <br />
-                <span>55</span>
+                <span>100</span>
               </div>
             </div>
           </div>
