@@ -5,8 +5,8 @@ import { actionAuthAccount } from './../../../redux/ExtraReducers/Accounts.Extra
 const LoginComponent = () => {
   const dispatch = useDispatch();
 
-  const [login, setLogin] = useState(`admin`);
-  const [password, setPassword] = useState(`*******`);
+  const [login, setLogin] = useState(`логин`);
+  const [password, setPassword] = useState(`пароль`);
 
   return (
     <div className='LoginComponent'>

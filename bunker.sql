@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.3
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Dec 15, 2022 at 07:03 PM
--- Server version: 8.0.29
--- PHP Version: 7.1.33
+-- Host: localhost
+-- Generation Time: Jan 15, 2023 at 11:24 AM
+-- Server version: 8.0.30-0ubuntu0.20.04.2
+-- PHP Version: 7.4.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -39,7 +39,7 @@ CREATE TABLE `аккаунты` (
 --
 
 INSERT INTO `аккаунты` (`номер`, `логин`, `пароль`, `массив_ролей`) VALUES
-(1, 'логин', '$2a$10$ucafCo.sxfrNb7vb2dt.tOhy5BauAgMwvQ/HTTX6Y.3BC6zzHJYLG', '[\"оператор\",\"администратор\",\"начальник\"]');
+(1, 'логин', '$2a$05$U13tH8zpnUrhMKEPd6478.qpayoWE2emFuJ7vvryYoCXgsRifbaYi', '[\"оператор\",\"администратор\",\"начальник\"]');
 
 -- --------------------------------------------------------
 
@@ -95,7 +95,8 @@ CREATE TABLE `груз` (
 --
 
 INSERT INTO `груз` (`номер`, `объем`, `дата_поступления`, `вид_груза`, `состояние_груза`, `номер_участка`, `ед_изм`) VALUES
-(1, 250.70, '2022-10-02', 1, 1, 1, 2);
+(1, 250.70, '2022-10-02', 1, 1, 1, 2),
+(14, 33.00, '2022-12-20', 3, 1, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -154,6 +155,13 @@ CREATE TABLE `лог` (
   `тип_груза` int NOT NULL,
   `режим` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `лог`
+--
+
+INSERT INTO `лог` (`номер`, `дата`, `вагоны`, `время_сушки`, `тип_груза`, `режим`) VALUES
+(2, '2022-12-20', '5', -1, 3, -1);
 
 -- --------------------------------------------------------
 
@@ -343,6 +351,12 @@ ALTER TABLE `журнал_работы`
   ADD KEY `устройство` (`устройство`);
 
 --
+-- Indexes for table `лог`
+--
+ALTER TABLE `лог`
+  ADD PRIMARY KEY (`номер`);
+
+--
 -- Indexes for table `модель`
 --
 ALTER TABLE `модель`
@@ -404,7 +418,7 @@ ALTER TABLE `характеристики_устройств`
 -- AUTO_INCREMENT for table `аккаунты`
 --
 ALTER TABLE `аккаунты`
-  MODIFY `номер` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `номер` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `вид_груза`
@@ -416,7 +430,7 @@ ALTER TABLE `вид_груза`
 -- AUTO_INCREMENT for table `груз`
 --
 ALTER TABLE `груз`
-  MODIFY `номер` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `номер` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `единица_измерения`
@@ -429,6 +443,12 @@ ALTER TABLE `единица_измерения`
 --
 ALTER TABLE `журнал_работы`
   MODIFY `номер` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `лог`
+--
+ALTER TABLE `лог`
+  MODIFY `номер` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `модель`
