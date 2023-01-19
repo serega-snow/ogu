@@ -47,6 +47,8 @@
       }
     }
 
+
+
     .mode-widget {
       width: 45%;
       padding: 10px;
@@ -126,6 +128,25 @@
           }
         }
       }
+    }
+  }
+
+  &__traceMatrix {
+    padding: 10px;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    overflow-x: scroll;
+    width: 1600px;
+
+    p {
+      font-family: Poppins, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 27px;
+      letter-spacing: 0.02em;
+      color: #5A5A5F;
     }
   }
 }

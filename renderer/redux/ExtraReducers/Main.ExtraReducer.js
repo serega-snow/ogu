@@ -1,6 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import moment from 'moment';
-const math = require('mathjs');
+import MLRServer from './../../libs/mlr-server';
+import CorrelationAnalysis from './../../libs/analysis';
+import Matrix from './../../libs/matrix';
 
 // процесс запроса видов груза
 export const getTypeOfRawMaterialsFromDataBase = createAsyncThunk(
@@ -39,6 +41,25 @@ export const getСargoСonditionsFromDataBase = createAsyncThunk(
   }
 );
 // процесс запроса состояний груза
+
+// процесс запроса всех режимов
+export const getAllRequestModes = createAsyncThunk(
+  'main-slice/getAllRequestModes',
+  async ({}, { rejectWithValue }) => {
+    try {
+      const [requestModes] = await window.connectMySQL.execute(
+        `SELECT * FROM режим_работы`
+      );
+
+      if (requestModes.length < 1) throw new Error('Нет данных!');
+
+      return requestModes;
+    } catch (errorObject) {
+      return rejectWithValue(errorObject.message);
+    }
+  }
+);
+// процесс запроса всех режимов
 
 // главная -> сохранить и подобрать режим
 export const saveAndSelectMode = createAsyncThunk(
@@ -85,63 +106,33 @@ export const saveAndSelectMode = createAsyncThunk(
         '2')`
       );
 
+      //
+
       let y = [];
-      let x = [];
+      let x1 = [];
+      let x2 = [];
+      let x3 = [];
+      let x4 = [];
 
       const [result] = await window.connectMySQL.execute(
         'SELECT * FROM лог INNER JOIN погода ON лог.дата = погода.дата'
       );
 
       for (let i = 0; i < result.length; ++i) {
-        y.push([result[i]['время_сушки']]);
-        x.push([
-          1,
-          result[i]['масса'],
-          result[i]['температура'],
-          result[i]['влажность'],
-          result[i]['ветер'],
-        ]);
+        y.push(result[i]['время_сушки']);
+        x1.push(result[i]['масса']);
+        x2.push(result[i]['температура']);
+        x3.push(result[i]['влажность']);
+        x4.push(result[i]['ветер']);
       }
 
-      tresh(x);
+      const mlr = new MLRServer(y, x1, x2, x3);
 
-      console.log(`y::`, y);
-      console.log(`x::`, x);
+      const xt = [parseFloat(stateInputValueWeightCargo), -10, 70];
 
-      const axt = math.transpose(x);
-      console.log(axt);
+      const anal = new CorrelationAnalysis();
 
-      const multXtX = math.multiply(axt, x);
-      console.log('Xt*X', multXtX);
-
-      const multXtY = math.multiply(axt, y);
-      console.log('Xt*Y', multXtY);
-
-      const multXtXSize = multXtX.length;
-      console.log(multXtXSize);
-
-      const identityXtX = math.identity(multXtXSize);
-      console.log(identityXtX);
-
-      const inverseXtX = math.divide(1, multXtX);
-      console.log(inverseXtX);
-
-      const k = math.multiply(inverseXtX, multXtY);
-      console.log(k);
-
-      k[0] = -72.3144721025957;
-      k[1] = 0.72481565797818;
-      k[2] = 0;
-      k[3] = -0.0556773687333493;
-      k[4] = 24.7829936940322;
-
-      const predictY =
-        k[0] +
-        k[1] * parseFloat(stateInputValueWeightCargo) +
-        k[2] * -30 +
-        k[3] * 70 +
-        k[4] * 4;
-      console.log(predictY);
+      //
 
       setStatePreviewData(false);
       setStateCurrentValueWagons(null);
@@ -149,149 +140,233 @@ export const saveAndSelectMode = createAsyncThunk(
       setStateAddedDate(null);
       setStateSelectTypeOfRawMaterials(null);
       setStateSelectCargoCondition(null);
+
+      return {
+        y: mlr.predict(xt),
+        trace: mlr.traceSolution(xt),
+        'Матрица ковариаций': anal.covarianceMatrix(x1, x2, x3, x4),
+        'Матрица коэффициентов ковариаций': anal.сorrelationСoefficient(
+          x1,
+          x2,
+          x3,
+          x4
+        ),
+        traceMatrix: [
+          ` S = {${
+            new Matrix(anal.covarianceMatrix(x1, x2, x3, x4)).equation
+          }};`,
+          `V = {${
+            new Matrix(anal.сorrelationСoefficient(x1, x2, x3, x4)).equation
+          }}; `,
+        ],
+      };
     } catch (errorObject) {
       return rejectWithValue(errorObject.message);
     }
   }
 );
 
-function tresh(x) {
-  const matx = x;
+/////////////////////////////////////////////////
 
-  // x num
-  const Xnum = matx[0].length;
+// let y = [];
+// let x = [];
 
-  // log num
-  const n = matx.length;
+// const [result] = await window.connectMySQL.execute(
+//   'SELECT * FROM лог INNER JOIN погода ON лог.дата = погода.дата'
+// );
 
-  //
+// for (let i = 0; i < result.length; ++i) {
+//   y.push([result[i]['время_сушки']]);
+//   x.push([
+//     1,
+//     result[i]['масса'],
+//     result[i]['температура'],
+//     result[i]['влажность'],
+//     result[i]['ветер'],
+//   ]);
+// }
 
-  const Sxs = [];
+// tresh(x);
 
-  for (let xs = 0; xs < Xnum; ++xs) {
-    let sum = 0;
-    for (let i = 0; i < n; ++i) {
-      sum += matx[i][xs];
-    }
-    Sxs.push(sum / n);
-  }
+// console.log(`y::`, y);
+// console.log(`x::`, x);
 
-  const Sigmas = [1.93, 1.69, 2.74, 1.7];
+// const axt = math.transpose(x);
+// console.log(axt);
 
-  console.log('Xs: ', Sxs);
+// const multXtX = math.multiply(axt, x);
+// console.log('Xt*X', multXtX);
 
-  const Rmatx = [];
-  const Rs = {};
+// const multXtY = math.multiply(axt, y);
+// console.log('Xt*Y', multXtY);
 
-  for (let cn = 0; cn < Xnum; ++cn) {
-    const xc = cn + 1 >= Xnum ? 0 : cn + 1;
-    let r = 0;
-    for (let xn = 0; xn < n; ++xn) {
-      r += (matx[xn][cn] - Sxs[cn]) * (matx[xn][xc] - Sxs[xc]);
-    }
-    r = r / n / Sigmas[cn] / Sigmas[xc];
-    Rs[`${cn}-${xc}`] = r;
-  }
+// const multXtXSize = multXtX.length;
+// console.log(multXtXSize);
 
-  const Ris = [];
+// const identityXtX = math.identity(multXtXSize);
+// console.log(identityXtX);
 
-  for (let xr = 0; xr < Xnum; ++xr) {
-    const temp = [];
-    for (let xc = 0; xc < Xnum; ++xc) {
-      const key = `${xr}-${xc}` in Rs ? `${xr}-${xc}` : `${xc}-${xr}`;
-      if (xr === xc) {
-        temp.push(1);
-      } else {
-        temp.push(Rs[key]);
-      }
-    }
-    Rmatx.push(temp);
-  }
+// const inverseXtX = math.divide(1, multXtX);
+// console.log(inverseXtX);
 
-  console.log('R = ', Rmatx);
+// const k = math.multiply(inverseXtX, multXtY);
+// console.log(k);
 
-  // ...
-  const multRsKey = (denny) => {
-    let mult = 1;
-    for (const key in Rs) {
-      if (key === denny) continue;
-      mult *= Rs[key];
-    }
-    return mult;
-  };
-  const sqrtRsKey = (denny) => {
-    let mult = 1;
-    for (const key in Rs) {
-      if (key === denny) continue;
-      mult *= 1 - Math.pow(Rs[key], 2);
-    }
-    return Math.sqrt(mult);
-  };
-  for (let xr = 0; xr < Xnum; ++xr) {
-    const temp = [];
-    for (let xc = 0; xc < Xnum; ++xc) {
-      const key = `${xr}-${xc}` in Rs ? `${xr}-${xc}` : `${xc}-${xr}`;
-      if (xr === xc) {
-        temp.push('');
-      } else {
-        temp.push((Rs[key] - multRsKey(key)) / sqrtRsKey(key));
-      }
-    }
-    Ris.push(temp);
-  }
-  console.log("R' = ", Ris);
+// k[0] = -72.3144721025957;
+// k[1] = 0.72481565797818;
+// k[2] = 0;
+// k[3] = -0.0556773687333493;
+// k[4] = 24.7829936940322;
 
-  const sigmaObj = {};
-  const cov = () => {
-    const sigma = [];
-    for (let xn = 0; xn < Xnum; ++xn) {
-      let sum = 0;
-      for (let xr = 0; xr < n; ++xr) {
-        sum += Math.pow(matx[xr][xn] - Sxs[xn], 2);
-      }
-      sigmaObj[`${xn}-${xn}`] = sum / n;
-    }
-  };
+// const predictY =
+//   k[0] +
+//   k[1] * parseFloat(stateInputValueWeightCargo) +
+//   k[2] * -30 +
+//   k[3] * 70 +
+//   k[4] * 4;
+// console.log(predictY);
 
-  const cov2 = () => {
-    const sigma = [];
-    for (let xn = 0; xn < Xnum; ++xn) {
-      const xc = xn + 1 >= Xnum ? 0 : xn + 1;
-      let sum = 0;
-      let sum2 = 0;
-      for (let xr = 0; xr < n; ++xr) {
-        if (xn == 0) {
-          sum += ((matx[xr][xn] - Sxs[xn]) * (matx[xr][xc] - Sxs[xc])) / n;
-        } else {
-          sum2 += (matx[xr][xn] - Sxs[xn]) * (matx[xr][xc] - Sxs[xc]);
-        }
-      }
-      sigmaObj[`${xn}-${xc}`] = sum + sum2 / n;
-    }
-  };
+/////////////////////////////////////////////////
 
-  cov();
-  cov2();
+// function tresh(x) {
+//   const matx = x;
 
-  // create matrix Sigma
-  const sigmaMatx = [];
-  for (let xr = 0; xr < Xnum; ++xr) {
-    const temp = [];
-    for (let xc = 0; xc < Xnum; ++xc) {
-      const key = `${xr}-${xc}` in sigmaObj ? `${xr}-${xc}` : `${xc}-${xr}`;
-      temp.push(sigmaObj[key]);
-    }
-    sigmaMatx.push(temp);
-  }
-  console.log('Sigma Matrix: ', sigmaMatx);
+//   // x num
+//   const Xnum = matx[0].length;
 
-  // variations
-  const V = [];
-  for (let i = 0; i < Xnum; ++i) {
-    V.push((Math.sqrt(sigmaMatx[i][i]) / Sxs[i]) * 100);
-  }
+//   // log num
+//   const n = matx.length;
 
-  console.log('Variations: ', V);
-}
+//   //
+
+//   const Sxs = [];
+
+//   for (let xs = 0; xs < Xnum; ++xs) {
+//     let sum = 0;
+//     for (let i = 0; i < n; ++i) {
+//       sum += matx[i][xs];
+//     }
+//     Sxs.push(sum / n);
+//   }
+
+//   const Sigmas = [1.93, 1.69, 2.74, 1.7];
+
+//   console.log('Xs: ', Sxs);
+
+//   const Rmatx = [];
+//   const Rs = {};
+
+//   for (let cn = 0; cn < Xnum; ++cn) {
+//     const xc = cn + 1 >= Xnum ? 0 : cn + 1;
+//     let r = 0;
+//     for (let xn = 0; xn < n; ++xn) {
+//       r += (matx[xn][cn] - Sxs[cn]) * (matx[xn][xc] - Sxs[xc]);
+//     }
+//     r = r / n / Sigmas[cn] / Sigmas[xc];
+//     Rs[`${cn}-${xc}`] = r;
+//   }
+
+//   const Ris = [];
+
+//   for (let xr = 0; xr < Xnum; ++xr) {
+//     const temp = [];
+//     for (let xc = 0; xc < Xnum; ++xc) {
+//       const key = `${xr}-${xc}` in Rs ? `${xr}-${xc}` : `${xc}-${xr}`;
+//       if (xr === xc) {
+//         temp.push(1);
+//       } else {
+//         temp.push(Rs[key]);
+//       }
+//     }
+//     Rmatx.push(temp);
+//   }
+
+//   console.log('R = ', Rmatx);
+
+//   // ...
+//   const multRsKey = (denny) => {
+//     let mult = 1;
+//     for (const key in Rs) {
+//       if (key === denny) continue;
+//       mult *= Rs[key];
+//     }
+//     return mult;
+//   };
+//   const sqrtRsKey = (denny) => {
+//     let mult = 1;
+//     for (const key in Rs) {
+//       if (key === denny) continue;
+//       mult *= 1 - Math.pow(Rs[key], 2);
+//     }
+//     return Math.sqrt(mult);
+//   };
+//   for (let xr = 0; xr < Xnum; ++xr) {
+//     const temp = [];
+//     for (let xc = 0; xc < Xnum; ++xc) {
+//       const key = `${xr}-${xc}` in Rs ? `${xr}-${xc}` : `${xc}-${xr}`;
+//       if (xr === xc) {
+//         temp.push('');
+//       } else {
+//         temp.push((Rs[key] - multRsKey(key)) / sqrtRsKey(key));
+//       }
+//     }
+//     Ris.push(temp);
+//   }
+//   console.log("R' = ", Ris);
+
+//   const sigmaObj = {};
+//   const cov = () => {
+//     const sigma = [];
+//     for (let xn = 0; xn < Xnum; ++xn) {
+//       let sum = 0;
+//       for (let xr = 0; xr < n; ++xr) {
+//         sum += Math.pow(matx[xr][xn] - Sxs[xn], 2);
+//       }
+//       sigmaObj[`${xn}-${xn}`] = sum / n;
+//     }
+//   };
+
+//   const cov2 = () => {
+//     const sigma = [];
+//     for (let xn = 0; xn < Xnum; ++xn) {
+//       const xc = xn + 1 >= Xnum ? 0 : xn + 1;
+//       let sum = 0;
+//       let sum2 = 0;
+//       for (let xr = 0; xr < n; ++xr) {
+//         if (xn == 0) {
+//           sum += ((matx[xr][xn] - Sxs[xn]) * (matx[xr][xc] - Sxs[xc])) / n;
+//         } else {
+//           sum2 += (matx[xr][xn] - Sxs[xn]) * (matx[xr][xc] - Sxs[xc]);
+//         }
+//       }
+//       sigmaObj[`${xn}-${xc}`] = sum + sum2 / n;
+//     }
+//   };
+
+//   cov();
+//   cov2();
+
+//   // create matrix Sigma
+//   const sigmaMatx = [];
+//   for (let xr = 0; xr < Xnum; ++xr) {
+//     const temp = [];
+//     for (let xc = 0; xc < Xnum; ++xc) {
+//       const key = `${xr}-${xc}` in sigmaObj ? `${xr}-${xc}` : `${xc}-${xr}`;
+//       temp.push(sigmaObj[key]);
+//     }
+//     sigmaMatx.push(temp);
+//   }
+//   console.log('Sigma Matrix: ', sigmaMatx);
+
+//   // variations
+//   const V = [];
+//   for (let i = 0; i < Xnum; ++i) {
+//     V.push((Math.sqrt(sigmaMatx[i][i]) / Sxs[i]) * 100);
+//   }
+
+//   console.log('Variations: ', V);
+// }
 
 // главная -> сохранить и подобрать режим
+
+/////////////////////////////////////////////////

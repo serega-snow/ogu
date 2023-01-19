@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getTypeOfRawMaterialsFromDataBase,
   getСargoСonditionsFromDataBase,
+  getAllRequestModes,
   saveAndSelectMode,
 } from '../../../redux/ExtraReducers/Main.ExtraReducer';
 import toastr from 'toastr';
@@ -13,6 +14,7 @@ import {
   buildStyles,
 } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import MathJax from 'react-mathjax';
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -21,6 +23,7 @@ const HomePage = () => {
   const refInputValueWeightCargo = useRef();
   const refSelectTypeOfRawMaterials = useRef();
   const refSelectCargoConditions = useRef();
+  const refSelectMode = useRef();
 
   const [statePreviewData, setStatePreviewData] = useState(false);
   const [stateCurrentValueWagons, setStateCurrentValueWagons] = useState(null);
@@ -31,15 +34,74 @@ const HomePage = () => {
     useState(null);
   const [stateSelectCargoCondition, setStateSelectCargoCondition] =
     useState(null);
+  const [recomModeToSelect, setRecomModeToSelect] = useState(null);
+  const [stateSelectMode, setStateSelectMode] = useState(null);
+  const [dryingTime, setDryingTime] = useState(null);
+  const [dryingProgress, setDryingProgress] = useState(0);
 
-  const { dataTypeOfRawMaterials, dataCargoСonditions } = useSelector(
-    (store) => store.mainSlice
-  );
+  const {
+    dataTypeOfRawMaterials,
+    dataCargoСonditions,
+    dataAllModes,
+    predictY,
+    Матрица_ковариаций,
+    Матрица_коэффициентов_ковариаций,
+    trace,
+    traceMatrix,
+  } = useSelector((store) => store.mainSlice);
 
   useEffect(() => {
     dispatch(getTypeOfRawMaterialsFromDataBase());
     dispatch(getСargoСonditionsFromDataBase());
+    dispatch(getAllRequestModes());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (predictY) {
+      console.log(`predictY::`, predictY);
+
+      console.log(dataAllModes.length);
+
+      for (let index = 0; index < dataAllModes.length; index++) {
+        if (
+          dataAllModes[index].min_min <= predictY &&
+          dataAllModes[index].min_max >= predictY
+        )
+          setRecomModeToSelect(dataAllModes[index]);
+      }
+    }
+  }, [predictY]);
+
+  useEffect(() => {
+    if (dryingTime) {
+      console.log(`dryingTime::`, dryingTime);
+
+      setTimeout(() => {
+        console.log(`прошла секунда`, dryingTime);
+
+        setDryingTime(dryingTime - 1);
+
+        let timeTemp = dryingProgress + 100 / stateSelectMode.min_max;
+
+        timeTemp = Math.round(timeTemp);
+
+        setDryingProgress(timeTemp);
+
+        if (dryingProgress > 100) setDryingProgress(99);
+
+        console.log(dryingTime);
+
+        if (dryingTime === 1) {
+          alert(`Сушка завершена! Выводите вагоны!`);
+
+          setDryingProgress(0);
+          setDryingTime(null);
+          setRecomModeToSelect(null);
+          setStateSelectMode(null);
+        }
+      }, 1000);
+    }
+  }, [dryingTime]);
 
   return (
     <div className='HomePage'>
@@ -272,24 +334,57 @@ const HomePage = () => {
         <div className='mode-widget'>
           <label className='label'>
             Рекомендованный режим:{' '}
-            <input className='input' disabled value={'Режим не подобран'} />
+            <input
+              className='input'
+              disabled
+              value={recomModeToSelect && recomModeToSelect['название']}
+            />
           </label>
 
           <label className='label'>
-            Режим по умолчанию:{' '}
-            <select className='input'>
-              <option value={1}>не назначен</option>
-              <option value={2}>Режим 2</option>
-              <option value={3}>Режим 3</option>
-              <option value={4}>Режим 4</option>
-              <option value={5}>Режим 5</option>
+            Выберите режим:{' '}
+            <select className='input' ref={refSelectMode}>
+              <option value={-1}>-- выберите режим --</option>
+              {dataAllModes &&
+                dataAllModes.map((mode) => (
+                  <option key={mode['номер']} value={mode['номер']}>
+                    {mode['название']} (От {mode['min_min']} до{' '}
+                    {mode['min_max']})
+                  </option>
+                ))}
             </select>
           </label>
 
           <div className='wrapper-progress'>
             <button
               className='button'
-              onClick={() => {
+              onClick={(event) => {
+                event.preventDefault();
+
+                if (refSelectMode.current.value === `-1`) {
+                  toastr.error(
+                    'Режим не выбран!',
+                    `Ошибка сохранения первичных данных`,
+                    {
+                      timeOut: 5000,
+                      extendedTimeOut: 5000,
+                      progressBar: true,
+                      escapeHtml: true,
+                      closeButton: true,
+                    }
+                  );
+                  return;
+                }
+
+                const selectedMode = dataAllModes.filter(
+                  (mode) =>
+                    mode['номер'] === parseFloat(refSelectMode.current.value)
+                )[0];
+
+                setStateSelectMode(selectedMode);
+
+                setDryingTime(selectedMode.min_max);
+
                 // toastr.success('Процесс сушки завершен', `Успешно`, {
                 //   timeOut: 5000,
                 //   extendedTimeOut: 5000,
@@ -297,10 +392,10 @@ const HomePage = () => {
                 //   escapeHtml: true,
                 //   closeButton: true,
                 // });
-
-                window.alert(
-                  'Режим не подобран!!! Нажмите "Сохранить и подобрать режим"'
-                );
+                //
+                // window.alert(
+                //   'Режим не подобран!!! Нажмите "Сохранить и подобрать режим"'
+                // );
               }}
             >
               Начать
@@ -308,8 +403,8 @@ const HomePage = () => {
 
             <div className='progressbar'>
               <CircularProgressbar
-                value={100}
-                text={`${100}%`}
+                value={dryingProgress}
+                text={`${dryingProgress}%`}
                 strokeWidth={8}
                 className='progressbar-result'
               />
@@ -317,11 +412,29 @@ const HomePage = () => {
               <div className='current-proccess'>
                 Текущий процесс сушки
                 <br />
-                <span>100</span>
+                <span>{dryingProgress}</span>
               </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <div className='HomePage__traceMatrix'>
+        <MathJax.Provider>
+          {traceMatrix && (
+            <p>"Матрица ковариаций" и "Матрица коэффициентов ковариаций"</p>
+          )}
+          {traceMatrix &&
+            traceMatrix.map((itemTrace, index) => (
+              <MathJax.Node formula={itemTrace} key={index} />
+            ))}
+
+          {trace && <p>"Регрессия"</p>}
+          {trace &&
+            trace.map((itemString, index) => (
+              <MathJax.Node formula={itemString} key={index} />
+            ))}
+        </MathJax.Provider>
       </div>
     </div>
   );

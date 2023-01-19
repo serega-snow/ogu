@@ -18,6 +18,7 @@ import { actionAuthAccount } from '../ExtraReducers/Accounts.ExtraReducer';
 import {
   getTypeOfRawMaterialsFromDataBase,
   getСargoСonditionsFromDataBase,
+  getAllRequestModes,
   saveAndSelectMode,
 } from '../ExtraReducers/Main.ExtraReducer';
 import {
@@ -38,7 +39,14 @@ const mainSlice = createSlice({
     // все виды грузов
     dataTypeOfRawMaterials: null,
     dataCargoСonditions: null, // все состояние грузов
+    dataAllModes: null,
     dataUsers: null, // все юзеры
+
+    predictY: null,
+    Матрица_ковариаций: null,
+    Матрица_коэффициентов_ковариаций: null,
+    trace: null,
+    traceMatrix: null,
   },
 
   reducers: {
@@ -112,6 +120,10 @@ const mainSlice = createSlice({
       state.dataCargoСonditions = action.payload;
     },
 
+    [getAllRequestModes.fulfilled]: (state, action) => {
+      state.dataAllModes = action.payload;
+    },
+
     [getAllUsers.rejected]: (state, action) => {
       toastr.error(action.payload, `Ошибка получения данных`, {
         timeOut: 5000,
@@ -145,6 +157,14 @@ const mainSlice = createSlice({
         escapeHtml: true,
         closeButton: true,
       });
+
+      state.predictY = action.payload.y;
+      state.Матрица_ковариаций = action.payload['Матрица ковариаций'];
+      state.Матрица_коэффициентов_ковариаций =
+        action.payload['Матрица коэффициентов ковариаций'];
+
+      state.trace = action.payload.trace;
+      state.traceMatrix = action.payload.traceMatrix;
     },
 
     [saveAccountUser.rejected]: (state, action) => {
